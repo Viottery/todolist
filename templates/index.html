@@ -1,0 +1,40 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>TodoList</h1>
+        {% if current_user.is_authenticated %}
+        <p>Logged in as: {{ current_user.username }}</p>
+        <button class="btn"><a href="{{ url_for('logout') }}">Logout</a></button>
+        <button class="btn"><a href="{{ url_for('task_handler') }}">Add Task</a></button>
+        {% else %}
+        <button class="btn"><a href="{{ url_for('login') }}">Login</a></button>
+        {% endif %}
+        <ul id="task-list" class="task-list">
+            {% for task in tasks %}
+            <li class="task-item">
+                <div class="task-content">
+                    <strong>{{ task.title }}</strong>
+                    <div class="task-due-date">{{ task.due_date.strftime('%Y-%m-%d') }}</div>
+                    <div class="task-status">
+                        {% if task.completed %}
+                        <span style="text-decoration: line-through;">Completed</span>
+                        {% else %}
+                        <button class="btn-edit"><a href="{{ url_for('task_handler', task_id=task.id) }}">Edit</a></button>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+            {% else %}
+            <li class="task-item">No tasks added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
